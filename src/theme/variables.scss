@@ -1,2 +1,15 @@
-// For information on how to create your own theme, please see:
-// http://ionicframework.com/docs/theming/
+:root {
+  --ion-color-vermelho: #d82623;
+  --ion-color-vermelho-contrast: #ffffff;
+}
+
+.tema-claro {
+  color-scheme: light;
+  --ion-background-color: #ffffff;
+  --ion-text-color: #000000;
+}
+
+.barra-vermelha {
+  --background: var(--ion-color-vermelho);
+  --color: var(--ion-color-vermelho-contrast);
+}

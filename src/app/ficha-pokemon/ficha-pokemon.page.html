@@ -1,0 +1,17 @@
+@if (pokemon) {
+<ion-card class="quadrado-pokemon">
+  <div class="numero-pokemon">#{{ pokemon.id | number:'3.0' }}</div>
+
+  <div class="conteudo-pokemon">
+    <img class="imagem-pokemon" [src]="pokemon.imagem" [alt]="pokemon.nome" />
+
+    <div class="tipos-pokemon">
+      @for (tipo of pokemon.tipos; track tipo) {
+      <span class="cada-tipo {{ tipo }}"> {{ tipo }} </span>
+      }
+    </div>
+  </div>
+
+  <div class="nome-pokemon {{ pokemon.tipos[0] }}">{{ pokemon.nome }}</div>
+</ion-card>
+}

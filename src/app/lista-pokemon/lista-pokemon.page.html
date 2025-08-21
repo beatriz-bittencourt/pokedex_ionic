@@ -1,0 +1,13 @@
+<div class="grade-pokemons">
+  @for (pokemon of pokemons; track pokemon.id) {
+  <app-ficha-pokemon [pokemon]="pokemon"></app-ficha-pokemon>
+  }
+</div>
+
+<div class="controle-paginas">
+  <button (click)="paginaAnterior()" [disabled]="paginaAtual === 0">
+    &lt;
+  </button>
+  <span>Página {{ paginaAtual + 1 }}</span>
+  <button (click)="proximaPagina()">&gt;</button>
+</div>

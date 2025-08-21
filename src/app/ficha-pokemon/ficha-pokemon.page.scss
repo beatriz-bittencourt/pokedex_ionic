@@ -1,0 +1,123 @@
+.quadrado-pokemon {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 220px;
+  height: 270px;
+  margin: 20px;
+  border: 1.2 px solid rgb(210, 210, 210);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  transition: transform 0.3s;
+  position: relative;
+}
+
+.quadrado-pokemon:hover {
+  transform: scale(1.04);
+}
+
+.numero-pokemon {
+  position: absolute;
+  font-weight: bold;
+  left: 20px;
+  top: 12px;
+  color: rgb(142, 142, 142);
+  font-size: 0.85em;
+}
+
+.conteudo-pokemon {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.imagem-pokemon {
+  width: 75%;
+  height: 80%;
+}
+
+.tipos-pokemon {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cada-tipo {
+  padding: 4% 17%;
+  border-radius: 8px;
+  font-size: 0.9em;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.normal {
+  background-color: #a8a07a;
+}
+.fighting {
+  background-color: #e4352f;
+}
+.flying {
+  background-color: #e37cff;
+}
+.poison {
+  background-color: #9c48a9;
+}
+.ground {
+  background-color: #e6bf72;
+}
+.rock {
+  background-color: #b19834;
+}
+.bug {
+  background-color: #8abd1b;
+}
+.ghost {
+  background-color: #7d4b9e;
+}
+.steel {
+  background-color: #a3b9cd;
+}
+.fire {
+  background-color: #ec6331;
+}
+.water {
+  background-color: #2d82dd;
+}
+.grass {
+  background-color: #63dc4b;
+}
+.electric {
+  background-color: #d5d509;
+}
+.psychic {
+  background-color: #ea2e99;
+}
+.ice {
+  background-color: #83cbd2;
+}
+.dragon {
+  background-color: #4a2ed5;
+}
+.dark {
+  background-color: #665337;
+}
+.fairy {
+  background-color: #e769bb;
+}
+
+.nome-pokemon {
+  width: 100%;
+  padding: 10% 0;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  margin-top: auto;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  text-transform: capitalize;
+}

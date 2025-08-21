@@ -3,12 +3,26 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'folder/inbox',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
-    path: 'folder/:id',
+    path: 'home',
     loadComponent: () =>
-      import('./folder/folder.page').then((m) => m.FolderPage),
+      import('./pagina/home/home.page').then((m) => m.HomePage),
+  },
+  {
+    path: 'lista-pokemon',
+    loadComponent: () =>
+      import('./lista-pokemon/lista-pokemon.page').then(
+        (m) => m.ListaPokemonPage
+      ),
+  },
+  {
+    path: 'ficha-pokemon',
+    loadComponent: () =>
+      import('./ficha-pokemon/ficha-pokemon.page').then(
+        (m) => m.FichaPokemonPage
+      ),
   },
 ];
