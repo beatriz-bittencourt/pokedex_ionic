@@ -14,7 +14,9 @@ import {
   IonIcon,
   IonLabel,
   IonRouterOutlet,
-  IonRouterLink,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -38,6 +40,7 @@ import {
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  standalone: true,
   imports: [
     RouterLink,
     RouterLinkActive,
@@ -52,8 +55,10 @@ import {
     IonItem,
     IonIcon,
     IonLabel,
-    IonRouterLink,
     IonRouterOutlet,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
     ListaPokemonPage,
   ],
 })
@@ -67,7 +72,9 @@ export class AppComponent {
     { title: 'Trash', url: '/folder/trash', icon: 'trash' },
     { title: 'Spam', url: '/folder/spam', icon: 'warning' },
   ];
+
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+
   constructor() {
     addIcons({
       mailOutline,
