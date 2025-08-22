@@ -1,13 +1,36 @@
-<div class="grade-pokemons">
-  @for (pokemon of pokemons; track pokemon.id) {
-  <app-ficha-pokemon [pokemon]="pokemon"></app-ficha-pokemon>
-  }
-</div>
+<ion-content>
+  <div class="grade-pokemons">
+    @for (pokemon of pokemons; track pokemon.id) {
+    <app-ficha-pokemon [pokemon]="pokemon"></app-ficha-pokemon>
+    }
+  </div>
+</ion-content>
 
 <div class="controle-paginas">
+  <select [(ngModel)]="limitePorPagina" (change)="mudarLimite()">
+    <option *ngFor="let op of opcoesLimite" [value]="op">{{ op }}</option>
+  </select>
   <button (click)="paginaAnterior()" [disabled]="paginaAtual === 0">
     &lt;
   </button>
-  <span>Página {{ paginaAtual + 1 }}</span>
-  <button (click)="proximaPagina()">&gt;</button>
+
+  <ng-container *ngFor="let p of getPaginasVisiveis()">
+    <button
+      *ngIf="p !== '...'; else reticencias"
+      [class.ativo]="p === paginaAtual + 1"
+      (click)="typeof p === 'number' && irParaPagina(p)"
+    >
+      {{ p }}
+    </button>
+    <ng-template #reticencias>
+      <span>...</span>
+    </ng-template>
+  </ng-container>
+
+  <button
+    (click)="proximaPagina()"
+    [disabled]="paginaAtual + 1 >= totalPaginas"
+  >
+    &gt;
+  </button>
 </div>
