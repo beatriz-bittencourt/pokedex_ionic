@@ -8,6 +8,7 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { FichaPokemonPage } from '../ficha-pokemon/ficha-pokemon.page';
+import { PokemonService } from '../services/pokemon.service';
 
 @Component({
   selector: 'app-lista-pokemon',
@@ -29,58 +30,23 @@ export class ListaPokemonPage implements OnInit {
   paginaAtual = 0;
   limitePorPagina = 15;
   opcoesLimite = [5, 10, 15, 20, 50];
-
   totalPokemons = 0;
 
-  @ViewChild(IonContent) conteudo!: IonContent;
-
-  async ngOnInit() {
-    await this.carregarPokemons();
+  private _procuraTexto = '';
+  get procuraTexto(): string {
+    return this._procuraTexto;
   }
-
-  async carregarPokemons() {
-    const offset = this.paginaAtual * this.limitePorPagina;
-    const resposta = await fetch(
-      `https://pokeapi.co/api/v2/pokemon?limit=${this.limitePorPagina}&offset=${offset}`
-    );
-    const dados = await resposta.json();
-    this.totalPokemons = dados.count;
-    this.pokemons = await Promise.all(
-      dados.results.map(async (p: any) => {
-        const id = Number(p.url.split('/').filter(Boolean).pop());
-        const detalhes = await fetch(p.url);
-        const dadosDetalhes = await detalhes.json();
-        const tipos = dadosDetalhes.types.map((t: any) => t.type.name);
-
-        return {
-          id,
-          nome: p.name,
-          imagem: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`,
-          tipos,
-        };
-      })
-    );
-
+  set procuraTexto(value: string) {
+    this._procuraTexto = value;
+    this.paginaAtual = 0;
     this.scrollParaTopo();
   }
 
-  async proximaPagina() {
-    if (this.paginaAtual + 1 < this.totalPaginas) {
-      this.paginaAtual++;
-      await this.carregarPokemons();
-    }
-  }
+  @ViewChild(IonContent) conteudo!: IonContent;
+  constructor(private pokemonService: PokemonService) {}
 
-  async paginaAnterior() {
-    if (this.paginaAtual > 0) {
-      this.paginaAtual--;
-      await this.carregarPokemons();
-    }
-  }
-
-  async mudarLimite() {
-    this.paginaAtual = 0;
-    await this.carregarPokemons();
+  async ngOnInit() {
+    await this.carregarTodosPokemons();
   }
 
   scrollParaTopo() {
@@ -89,8 +55,45 @@ export class ListaPokemonPage implements OnInit {
     }
   }
 
+  async carregarTodosPokemons() {
+    this.pokemons = await this.pokemonService.buscarTodos();
+    this.totalPokemons = this.pokemons.length;
+    this.scrollParaTopo();
+  }
+
+  async proximaPagina() {
+    if (this.paginaAtual + 1 < this.totalPaginas) {
+      this.paginaAtual++;
+      this.scrollParaTopo();
+    }
+  }
+
+  async paginaAnterior() {
+    if (this.paginaAtual > 0) {
+      this.paginaAtual--;
+      this.scrollParaTopo();
+    }
+  }
+
+  async mudarLimite() {
+    this.limitePorPagina = Number(this.limitePorPagina);
+    this.paginaAtual = 0;
+    this.scrollParaTopo();
+  }
+
   get totalPaginas(): number {
-    return Math.ceil(this.totalPokemons / this.limitePorPagina);
+    return Math.ceil(this.pokemonsFiltrados.length / this.limitePorPagina);
+  }
+
+  get pokemonsFiltrados() {
+    if (!this.procuraTexto) return this.pokemons;
+    return this.pokemons.filter((p) =>
+      p.nome.toLowerCase().includes(this.procuraTexto.toLowerCase())
+    );
+  }
+  async irParaPagina(num: number) {
+    this.paginaAtual = num - 1;
+    this.scrollParaTopo();
   }
 
   getPaginasVisiveis(): (number | string)[] {
@@ -101,24 +104,46 @@ export class ListaPokemonPage implements OnInit {
     if (total <= 7) {
       for (let i = 1; i <= total; i++) paginas.push(i);
     } else {
-      paginas.push(1);
-
-      if (atual > 4) paginas.push('...');
-
-      const inicio = Math.max(2, atual - 1);
-      const fim = Math.min(total - 1, atual + 1);
-      for (let i = inicio; i <= fim; i++) paginas.push(i);
-
-      if (atual < total - 3) paginas.push('...');
-
-      paginas.push(total);
+      if (atual <= 3) {
+        paginas.push(1, 2, 3, 4, '...', total);
+      } else if (atual >= total - 2) {
+        paginas.push(1, '...', total - 3, total - 2, total - 1, total);
+      } else {
+        paginas.push(1, '...', atual - 1, atual, atual + 1, '...', total);
+      }
     }
-
     return paginas;
   }
+  ordenacao: string = 'crescente';
+  opcoesOrdenacao = [
+    { valor: 'alfabetica-asc', label: 'Alfabética Nominal A-Z' },
+    { valor: 'alfabetica-desc', label: 'Alfabética Nominal Z-A' },
+    { valor: 'crescente', label: 'Numérica Crescente' },
+    { valor: 'decrescente', label: 'Numérica Decrescente' },
+  ];
 
-  async irParaPagina(num: number) {
-    this.paginaAtual = num - 1;
-    await this.carregarPokemons();
+  get pokemonsOrdenados() {
+    let pokemons = [...this.pokemonsFiltrados];
+    switch (this.ordenacao) {
+      case 'alfabetica-asc':
+        pokemons.sort((a, b) => a.nome.localeCompare(b.nome));
+        break;
+      case 'alfabetica-desc':
+        pokemons.sort((a, b) => b.nome.localeCompare(a.nome));
+        break;
+      case 'decrescente':
+        pokemons.sort((a, b) => b.id - a.id);
+        break;
+      case 'crescente':
+      default:
+        pokemons.sort((a, b) => a.id - b.id);
+        break;
+    }
+    return pokemons;
+  }
+
+  get pokemonsPaginaAtual() {
+    const inicio = this.paginaAtual * this.limitePorPagina;
+    return this.pokemonsOrdenados.slice(inicio, inicio + this.limitePorPagina);
   }
 }
