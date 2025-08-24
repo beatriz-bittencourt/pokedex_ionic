@@ -1,0 +1,87 @@
+<div class="pesquisa-ordenacao">
+  <div class="ordenacao">
+    <span class="span-ordenacao">Ordenar por: </span>
+    <ion-select
+      [(ngModel)]="ordenacao"
+      (ionChange)="quandoMudarOrdenacao()"
+      interface="popover"
+      placeholder="Ordenar"
+      class="select-ordenacao"
+    >
+      <ion-select-option *ngFor="let op of opcoesOrdenacao" [value]="op.valor">
+        {{ op.label }}
+      </ion-select-option>
+    </ion-select>
+  </div>
+
+  <div class="barra-pesquisa">
+    <input
+      type="text"
+      placeholder="Pesquisar nome do Pokémon..."
+      [(ngModel)]="procuraTexto"
+      maxlength="150"
+    />
+    <button
+      *ngIf="procuraTexto"
+      class="limpar-btn"
+      (click)="procuraTexto=''"
+      title="Apagar"
+    >
+      ×
+    </button>
+  </div>
+</div>
+
+<div class="grade-pokemons">
+  <ng-container *ngFor="let pokemon of pokemonsPaginaAtual">
+    <app-ficha-pokemon
+      [pokemon]="pokemon"
+      (favoritar)="favoritar(pokemon)"
+    ></app-ficha-pokemon>
+  </ng-container>
+</div>
+
+<div class="controle-paginas">
+  <div class="pokemon-por-pagina">
+    <div>
+      <span>Itens por página:</span>
+      <select [(ngModel)]="limitePorPagina" (change)="mudarLimite()">
+        <option *ngFor="let op of opcoesLimite" [ngValue]="op">{{ op }}</option>
+      </select>
+    </div>
+    <div class="intervalo-exibicao" title="Total de itens">
+      {{ intervaloExibicao }}
+    </div>
+  </div>
+  <div class="paginas-visiveis">
+    <button
+      (click)="irParaPagina(1)"
+      [disabled]="paginaAtual === 0"
+      title="Primeira página"
+    >
+      <<
+    </button>
+    <button
+      (click)="paginaAnterior()"
+      [disabled]="paginaAtual === 0"
+      title="Página anterior"
+    >
+      <
+    </button>
+    <span class="pagina-atual" title="Página atual">{{ paginaAtual + 1 }}</span>
+    <button
+      (click)="proximaPagina()"
+      [disabled]="paginaAtual + 1 >= totalPaginas"
+      title="Próxima página"
+    >
+      >
+    </button>
+    <button
+      (click)="irParaPagina(totalPaginas)"
+      [disabled]="paginaAtual + 1 >= totalPaginas"
+      title="Última página"
+    >
+      >>
+    </button>
+  </div>
+</div>

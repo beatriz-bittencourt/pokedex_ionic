@@ -118,3 +118,12 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
+
+ion-item {
+  --background: #ffffff;
+
+  &.selected {
+    --background: #f0f0f0;
+    font-weight: bold;
+  }
+}

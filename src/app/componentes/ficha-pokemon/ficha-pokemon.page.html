@@ -1,6 +1,13 @@
-@if (pokemon) {
 <ion-card class="quadrado-pokemon">
-  <div class="numero-pokemon">#{{ pokemon.id | number:'3.0' }}</div>
+  <div class="topo-pokemon">
+    <div class="numero-pokemon">#{{ pokemon.id | number:'3.0' }}</div>
+    <ion-icon
+      class="coracao"
+      [name]="pokemon.favorito ? 'heart' : 'heart-outline'"
+      [color]="pokemon.favorito ? 'danger' : 'medium'"
+      (click)="favoritar(pokemon)"
+    ></ion-icon>
+  </div>
 
   <div class="conteudo-pokemon">
     <img class="imagem-pokemon" [src]="pokemon.imagem" [alt]="pokemon.nome" />
@@ -14,4 +21,3 @@
 
   <div class="nome-pokemon {{ pokemon.tipos[0] }}">{{ pokemon.nome }}</div>
 </ion-card>
-}

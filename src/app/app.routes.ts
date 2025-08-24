@@ -14,15 +14,20 @@ export const routes: Routes = [
   {
     path: 'lista-pokemon',
     loadComponent: () =>
-      import('./lista-pokemon/lista-pokemon.page').then(
+      import('../app/componentes/lista-pokemon/lista-pokemon.page').then(
         (m) => m.ListaPokemonPage
       ),
   },
   {
     path: 'ficha-pokemon',
     loadComponent: () =>
-      import('./ficha-pokemon/ficha-pokemon.page').then(
+      import('../app/componentes/ficha-pokemon/ficha-pokemon.page').then(
         (m) => m.FichaPokemonPage
       ),
+  },
+  {
+    path: 'favoritos',
+    loadComponent: () =>
+      import('./pagina/favoritos/favoritos.page').then((m) => m.FavoritosPage),
   },
 ];

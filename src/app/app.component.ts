@@ -1,14 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { ListaPokemonPage } from '../app/lista-pokemon/lista-pokemon.page';
 import {
   IonApp,
-  IonSplitPane,
   IonMenu,
   IonContent,
   IonList,
-  IonListHeader,
-  IonNote,
   IonMenuToggle,
   IonItem,
   IonIcon,
@@ -34,6 +30,8 @@ import {
   warningSharp,
   bookmarkOutline,
   bookmarkSharp,
+  homeOutline,
+  homeSharp,
 } from 'ionicons/icons';
 
 @Component({
@@ -45,12 +43,9 @@ import {
     RouterLink,
     RouterLinkActive,
     IonApp,
-    IonSplitPane,
     IonMenu,
     IonContent,
     IonList,
-    IonListHeader,
-    IonNote,
     IonMenuToggle,
     IonItem,
     IonIcon,
@@ -59,18 +54,12 @@ import {
     IonHeader,
     IonToolbar,
     IonTitle,
-    ListaPokemonPage,
   ],
 })
 export class AppComponent {
   public appPages = [
-    { title: 'Inbox', url: '/folder/inbox', icon: 'mail' },
-    { title: 'Home', url: '/home', icon: 'mail' },
-    { title: 'Outbox', url: '/folder/outbox', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/favorites', icon: 'heart' },
-    { title: 'Archived', url: '/folder/archived', icon: 'archive' },
-    { title: 'Trash', url: '/folder/trash', icon: 'trash' },
-    { title: 'Spam', url: '/folder/spam', icon: 'warning' },
+    { title: 'Início', url: '/home', icon: 'home' },
+    { title: 'Favoritos', url: '/favoritos', icon: 'heart' },
   ];
 
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
@@ -91,6 +80,8 @@ export class AppComponent {
       warningSharp,
       bookmarkOutline,
       bookmarkSharp,
+      homeOutline,
+      homeSharp,
     });
   }
 }

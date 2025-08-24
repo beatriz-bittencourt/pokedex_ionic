@@ -1,0 +1,18 @@
+<app-cabecalho></app-cabecalho>
+
+<ion-content>
+  <h1 class="titulo-pagina">Favoritos</h1>
+
+  <div class="grade-pokemons">
+    <ng-container *ngFor="let pokemon of favoritos">
+      <app-ficha-pokemon
+        [pokemon]="pokemon"
+        (favoritar)="favoritar(pokemon)"
+      ></app-ficha-pokemon>
+    </ng-container>
+
+    <div *ngIf="favoritos.length === 0" class="sem-favoritos">
+      Nenhum Pokémon favoritado ainda.
+    </div>
+  </div>
+</ion-content>

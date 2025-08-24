@@ -9,7 +9,7 @@
   border: 1.2 px solid rgb(210, 210, 210);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  background-color: #ffffff;
   transition: transform 0.3s;
   position: relative;
 }
@@ -18,8 +18,17 @@
   transform: scale(1.04);
 }
 
+.topo-pokemon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  width: 100%;
+}
+
 .numero-pokemon {
-  position: absolute;
   font-weight: bold;
   left: 20px;
   top: 12px;
@@ -27,11 +36,14 @@
   font-size: 0.85em;
 }
 
+.coracao {
+  cursor: pointer;
+}
+
 .conteudo-pokemon {
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 20px;
   justify-content: space-evenly;
   align-items: center;
 }
@@ -51,7 +63,7 @@
   padding: 4% 17%;
   border-radius: 8px;
   font-size: 0.9em;
-  color: #fff;
+  color: #ffffff;
   text-transform: capitalize;
 }
 
@@ -115,7 +127,7 @@
   padding: 10% 0;
   text-align: center;
   font-weight: bold;
-  color: #fff;
+  color: #ffffff;
   margin-top: auto;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
