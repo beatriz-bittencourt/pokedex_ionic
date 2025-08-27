@@ -60,6 +60,7 @@ export class AppComponent {
   public appPages = [
     { title: 'Início', url: '/home', icon: 'home' },
     { title: 'Favoritos', url: '/favoritos', icon: 'heart' },
+    //{ title: 'Detalhes', url: '/detalhes', icon: 'heart' },
   ];
 
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];

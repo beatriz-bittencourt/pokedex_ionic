@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonCard, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -16,6 +16,11 @@ addIcons({ heart, 'heart-outline': heartOutline });
 })
 export class FichaPokemonPage {
   @Input() pokemon: any;
+  @Output() selecionar = new EventEmitter();
+
+  emitirClique() {
+    this.selecionar.emit(this.pokemon.id);
+  }
 
   constructor(private favoritosService: FavoritosService) {}
 

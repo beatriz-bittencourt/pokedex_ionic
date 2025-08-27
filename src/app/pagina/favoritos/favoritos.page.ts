@@ -5,6 +5,7 @@ import { IonContent } from '@ionic/angular/standalone';
 import { CabecalhoComponent } from 'src/app/componentes/cabecalho/cabecalho.component';
 import { FichaPokemonPage } from '../../componentes/ficha-pokemon/ficha-pokemon.page';
 import { FavoritosService } from '../../services/favoritos.service';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-favoritos',
@@ -22,7 +23,10 @@ import { FavoritosService } from '../../services/favoritos.service';
 export class FavoritosPage implements OnInit {
   favoritos: any[] = [];
 
-  constructor(private favoritosService: FavoritosService) {}
+  constructor(
+    private favoritosService: FavoritosService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.favoritosService.favoritos$.subscribe((lista) => {
@@ -35,5 +39,9 @@ export class FavoritosPage implements OnInit {
 
   favoritar(pokemon: any) {
     this.favoritosService.alterarFavorito(pokemon);
+  }
+
+  abrirDetalhes(id: number) {
+    this.router.navigate(['/detalhes', id]);
   }
 }

@@ -5,7 +5,7 @@
       class="coracao"
       [name]="pokemon.favorito ? 'heart' : 'heart-outline'"
       [color]="pokemon.favorito ? 'danger' : 'medium'"
-      (click)="favoritar(pokemon)"
+      (click)="$event.stopPropagation(); favoritar(pokemon)"
     ></ion-icon>
   </div>
 

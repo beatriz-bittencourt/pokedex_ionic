@@ -35,3 +35,22 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+ion-select-popover .select-interface-option {
+  --background: #ffffff;
+  --color: #070707;
+  --background-selected: #e0e0e0 !important;
+  --color-selected: #0f0f0f;
+}
+
+ion-select {
+  --highlight-height: 0px;
+  --highlight-color-focused: transparent;
+  --highlight-color-hover: transparent;
+  --border-width: 0px;
+  --border-style: none;
+}
+
+.sc-ion-select-popover-md-h ion-list.sc-ion-select-popover-md {
+  background-color: white;
+}

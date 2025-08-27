@@ -89,6 +89,10 @@ export class ListaPokemonPage implements OnInit {
     this.scrollParaTopo();
   }
 
+  abrirDetalhes(id: number) {
+    this.router.navigate(['/detalhes', id]);
+  }
+
   atualizarListaProcessada() {
     let lista = [...this.pokemons];
     if (this.procuraTexto) {

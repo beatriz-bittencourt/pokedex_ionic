@@ -5,10 +5,12 @@
 
   <div class="grade-pokemons">
     <ng-container *ngFor="let pokemon of favoritos">
-      <app-ficha-pokemon
-        [pokemon]="pokemon"
-        (favoritar)="favoritar(pokemon)"
-      ></app-ficha-pokemon>
+      <div class="pokemon-clicavel" (click)="abrirDetalhes(pokemon.id)">
+        <app-ficha-pokemon
+          [pokemon]="pokemon"
+          (favoritar)="favoritar(pokemon)"
+        ></app-ficha-pokemon>
+      </div>
     </ng-container>
 
     <div *ngIf="favoritos.length === 0" class="sem-favoritos">
