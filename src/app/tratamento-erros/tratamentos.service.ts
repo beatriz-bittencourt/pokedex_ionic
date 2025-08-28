@@ -12,13 +12,16 @@ export class TratamentosService {
     private controladorToast: ToastController
   ) {}
 
-  async mostrarLoading(mensagem: string = 'Carregando...') {
+  async mostrarLoading(mensagem = 'Carregando...') {
     this.carregar = await this.controladorLoading.create({
       message: mensagem,
       spinner: 'bubbles',
       cssClass: 'carregar',
     });
-    await this.carregar.present();
+
+    setTimeout(() => {
+      this.carregar?.present();
+    }, 50);
   }
 
   async esconderCarregando() {

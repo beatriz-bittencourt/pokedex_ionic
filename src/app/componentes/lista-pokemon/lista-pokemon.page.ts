@@ -62,7 +62,10 @@ export class ListaPokemonPage implements OnInit {
     private tratamentoErro: TratamentosService
   ) {
     this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
+      if (
+        event instanceof NavigationEnd &&
+        this.router.url.includes('/lista-pokemon')
+      ) {
         this.carregarTodosPokemons();
       }
     });

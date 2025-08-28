@@ -67,14 +67,15 @@ export class DetalhesPage implements OnInit {
   };
 
   async ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) return;
+
     try {
       await this.tratamentoErro.mostrarLoading('Carregando...');
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
-        await this.carregarPokemon(+id);
-      }
+      await this.carregarPokemon(+id);
     } catch (e) {
-      this.tratamentoErro.mostrarErro('Erro ao carregar os Pokémon.');
+      this.tratamentoErro.mostrarErro('Erro ao carregar :(');
+      console.error(e);
     } finally {
       await this.tratamentoErro.esconderCarregando();
     }
@@ -99,22 +100,28 @@ export class DetalhesPage implements OnInit {
   }
 
   async carregarPokemon(id: number) {
-    this.pokemon = await this.pokemonService.buscarPokemonPorId(id);
+    try {
+      this.pokemon = await this.pokemonService.buscarPokemonPorId(id);
 
-    this.habilidades =
-      this.pokemon.habilidades?.map((h: any) => h.ability.name) || [];
-    this.fraquezas = this.pokemon.fraquezas || [];
-    this.resistencias = this.pokemon.resistencias || [];
-    this.imunidades =
-      this.pokemon.imunidades?.length > 0 ? this.pokemon.imunidades : ['-'];
-    this.movimentos = this.pokemon.moves || [];
+      this.habilidades =
+        this.pokemon.habilidades?.map((h: any) => h.ability.name) || [];
+      this.fraquezas = this.pokemon.fraquezas || [];
+      this.resistencias = this.pokemon.resistencias || [];
+      this.imunidades =
+        this.pokemon.imunidades?.length > 0 ? this.pokemon.imunidades : ['-'];
+      this.movimentos = this.pokemon.moves || [];
 
-    this.totalPaginas = Math.ceil(
-      this.movimentos.length / this.movimentosPorPagina
-    );
-    this.paginaAtual = 1;
+      this.totalPaginas = Math.ceil(
+        this.movimentos.length / this.movimentosPorPagina
+      );
+      this.paginaAtual = 1;
 
-    this.favorito = this.favoritosService.eFavorito(this.pokemon.id);
+      this.favorito = this.favoritosService.eFavorito(this.pokemon.id);
+    } catch (err) {
+      console.error('Erro ao buscar Pokémon', err);
+      this.pokemon = null;
+      throw err;
+    }
   }
 
   alternarFavorito() {
