@@ -43,3 +43,7 @@ ion-select {
   --border-width: 0px;
   --border-style: none;
 }
+
+ion-select::part(icon) {
+  color: #666 !important;
+}

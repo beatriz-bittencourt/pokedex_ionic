@@ -6,6 +6,7 @@ import { CabecalhoComponent } from 'src/app/componentes/cabecalho/cabecalho.comp
 import { FichaPokemonPage } from '../../componentes/ficha-pokemon/ficha-pokemon.page';
 import { FavoritosService } from '../../services/favoritos.service';
 import { Router, NavigationEnd } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-favoritos',
@@ -25,9 +26,12 @@ export class FavoritosPage implements OnInit {
 
   constructor(
     private favoritosService: FavoritosService,
-    private router: Router
+    private router: Router,
+    private navCtrl: NavController
   ) {}
-
+  voltarHome() {
+    this.navCtrl.navigateRoot('/home');
+  }
   ngOnInit() {
     this.favoritosService.favoritos$.subscribe((lista) => {
       this.favoritos = lista.map((pokemon) => ({

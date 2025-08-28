@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PokemonService } from 'src/app/services/pokemon.service';
 import { FavoritosService } from 'src/app/services/favoritos.service';
 import { TratamentosService } from 'src/app/tratamento-erros/tratamentos.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-detalhes',
@@ -45,19 +46,20 @@ export class DetalhesPage implements OnInit {
   totalPaginas = 1;
   favorito = false;
 
-  carregando = false; // flag para spinner
+  carregando = false;
 
   constructor(
     private route: ActivatedRoute,
     private pokemonService: PokemonService,
     private favoritosService: FavoritosService,
-    private tratamentoErro: TratamentosService
+    private tratamentoErro: TratamentosService,
+    private navCtrl: NavController
   ) {}
 
   coresTipo: any = {
     normal: '#d8d7b0',
     fighting: '#f19b96',
-    flying: '#e7b8ff',
+    flying: '#8fa8f9',
     poison: '#caa0d1',
     ground: '#f2d79b',
     rock: '#d3c175',
@@ -74,6 +76,10 @@ export class DetalhesPage implements OnInit {
     dark: '#b8a78b',
     fairy: '#f5b4d9',
   };
+
+  voltarHome() {
+    this.navCtrl.navigateRoot('/home');
+  }
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');

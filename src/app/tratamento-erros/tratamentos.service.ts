@@ -40,4 +40,16 @@ export class TratamentosService {
     });
     toast.present();
   }
+
+  async mostrarAvisoPesquisa(
+    mensagem: string = 'Nenhum Pokémon encontrado! :/'
+  ) {
+    const toast = await this.controladorToast.create({
+      message: mensagem,
+      duration: 2500,
+      color: 'medium',
+      position: 'top',
+    });
+    toast.present();
+  }
 }

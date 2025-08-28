@@ -13,6 +13,25 @@
   align-items: center;
   gap: 28px;
   padding: 50px;
+  margin-top: -40px;
+}
+
+.botao-voltar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 20px 0 0 20px;
+}
+
+.botao-voltar:hover {
+  background-color: #e0e0e0;
 }
 
 .detalhes-pagina {

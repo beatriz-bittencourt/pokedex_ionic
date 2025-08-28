@@ -7,6 +7,7 @@
   </div>
 
   <div *ngIf="!carregando">
+    <button class="botao-voltar" (click)="voltarHome()">⭠</button>
     <div class="centralizar-pagina" *ngIf="pokemon">
       <div class="detalhes-pagina">
         <div class="pokemon-detalhes">
@@ -64,6 +65,51 @@
             </div>
           </div>
 
+          <div class="descricao-abaixo fraquezas" *ngIf="fraquezas.length > 0">
+            <h3>Fraquezas</h3>
+            <div class="parte-tipos">
+              <span
+                *ngFor="let fraq of fraquezas"
+                class="tipo"
+                [ngStyle]="{ 'background-color': coresTipo[fraq] || '#d8d7b0' }"
+              >
+                {{ fraq }}
+              </span>
+            </div>
+          </div>
+
+          <div
+            class="descricao-abaixo resistencias"
+            *ngIf="resistencias.length > 0"
+          >
+            <h3>Resistências</h3>
+            <div class="parte-tipos">
+              <span
+                *ngFor="let resis of resistencias"
+                class="tipo"
+                [ngStyle]="{ 'background-color': coresTipo[resis] || '#d8d7b0' }"
+              >
+                {{ resis }}
+              </span>
+            </div>
+          </div>
+
+          <div
+            class="descricao-abaixo imunidades"
+            *ngIf="imunidades.length > 0"
+          >
+            <h3>Imunidades</h3>
+            <div class="parte-tipos">
+              <span
+                *ngFor="let imu of imunidades"
+                class="tipo"
+                [ngStyle]="{ 'background-color': coresTipo[imu] || '#d8d7b0' }"
+              >
+                {{ imu }}
+              </span>
+            </div>
+          </div>
+
           <div
             class="descricao-abaixo habilidades"
             *ngIf="habilidades.length > 0"
@@ -76,46 +122,14 @@
               >
             </div>
           </div>
-
-          <div class="descricao-abaixo fraquezas" *ngIf="fraquezas.length > 0">
-            <h3>Fraquezas</h3>
-            <div class="parte-tipos">
-              <span *ngFor="let fraq of fraquezas" class="tipo"
-                >{{ fraq }}</span
-              >
-            </div>
-          </div>
-
-          <div
-            class="descricao-abaixo resistencias"
-            *ngIf="resistencias.length > 0"
-          >
-            <h3>Resistências</h3>
-            <div class="parte-tipos">
-              <span *ngFor="let resis of resistencias" class="tipo"
-                >{{ resis }}</span
-              >
-            </div>
-          </div>
-
-          <div
-            class="descricao-abaixo imunidades"
-            *ngIf="imunidades.length > 0"
-          >
-            <h3>Imunidades</h3>
-            <div class="parte-tipos">
-              <span *ngFor="let imu of imunidades" class="tipo">{{ imu }}</span>
-            </div>
-          </div>
         </div>
       </div>
 
       <div class="movimentos">
         <h3 (click)="alternarMovimentos()" style="cursor: pointer">
-          Movimentos aprendíveis
-          <span>{{ mostrarMovimentos ? '▲' : '▼' }}</span>
+          Movimentos que pode aprender
+          <span>{{ mostrarMovimentos ? ' ⇧' : ' ⇩' }}</span>
         </h3>
-
         <div *ngIf="mostrarMovimentos" class="movimentos-conteudo">
           <table>
             <thead>
@@ -136,7 +150,7 @@
 
           <div class="paginacao">
             <button
-              title="Ir para a página anterior"
+              title="Anterior"
               (click)="irParaPaginaAnterior()"
               [disabled]="paginaAtual === 1"
             >
@@ -149,7 +163,7 @@
               movimentos.length }}
             </span>
             <button
-              title="Ir para a próxima página"
+              title="Próximo"
               (click)="irParaProximaPagina()"
               [disabled]="paginaAtual === totalPaginas"
             >

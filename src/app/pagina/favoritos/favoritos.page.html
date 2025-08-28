@@ -1,20 +1,22 @@
 <app-cabecalho></app-cabecalho>
 
-<ion-content>
+<ion-content
+  ><button class="botao-voltar" (click)="voltarHome()">⭠</button>
   <h1 class="titulo-pagina">Favoritos</h1>
+  <div class="centralizar">
+    <div class="grade-pokemons">
+      <ng-container *ngFor="let pokemon of favoritos">
+        <div class="pokemon-clicavel" (click)="abrirDetalhes(pokemon.id)">
+          <app-ficha-pokemon
+            [pokemon]="pokemon"
+            (favoritar)="favoritar(pokemon)"
+          ></app-ficha-pokemon>
+        </div>
+      </ng-container>
 
-  <div class="grade-pokemons">
-    <ng-container *ngFor="let pokemon of favoritos">
-      <div class="pokemon-clicavel" (click)="abrirDetalhes(pokemon.id)">
-        <app-ficha-pokemon
-          [pokemon]="pokemon"
-          (favoritar)="favoritar(pokemon)"
-        ></app-ficha-pokemon>
+      <div *ngIf="favoritos.length === 0" class="sem-favoritos">
+        Nenhum Pokémon favoritado ainda.
       </div>
-    </ng-container>
-
-    <div *ngIf="favoritos.length === 0" class="sem-favoritos">
-      Nenhum Pokémon favoritado ainda.
     </div>
   </div>
 </ion-content>

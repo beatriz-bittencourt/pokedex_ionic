@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-cabecalho',
@@ -11,7 +12,9 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule, CommonModule, FormsModule],
 })
 export class CabecalhoComponent implements OnInit {
-  constructor() {}
-
+  constructor(private navCtrl: NavController) {}
+  voltarHome() {
+    this.navCtrl.navigateRoot('/home');
+  }
   ngOnInit() {}
 }

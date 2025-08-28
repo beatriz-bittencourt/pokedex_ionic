@@ -37,17 +37,21 @@
   <div>Carregando...</div>
 </div>
 
-<div class="grade-pokemons" *ngIf="pokemons.length > 0">
-  <ng-container *ngFor="let pokemon of pokemonsPaginaAtual">
-    <div class="pokemon-clicavel" (click)="abrirDetalhes(pokemon.id)">
-      <app-ficha-pokemon
-        [pokemon]="pokemon"
-        (favoritar)="favoritar(pokemon)"
-      ></app-ficha-pokemon>
+<div class="centralizar">
+  <div class="grade-pokemons" *ngIf="pokemons.length > 0">
+    <div *ngIf="totalPokemons === 0 && procuraTexto">
+      <p class="mensagem-nenhum">Nenhum Pokémon encontrado! :/</p>
     </div>
-  </ng-container>
+    <ng-container *ngFor="let pokemon of pokemonsPaginaAtual">
+      <div class="pokemon-clicavel" (click)="abrirDetalhes(pokemon.id)">
+        <app-ficha-pokemon
+          [pokemon]="pokemon"
+          (favoritar)="favoritar(pokemon)"
+        ></app-ficha-pokemon>
+      </div>
+    </ng-container>
+  </div>
 </div>
-
 <div class="controle-paginas" *ngIf="pokemons.length > 0">
   <div class="pokemon-por-pagina">
     <div>
@@ -71,7 +75,7 @@
     <button
       (click)="paginaAnterior()"
       [disabled]="paginaAtual === 0"
-      title="Ir para a página anterior"
+      title="Anterior"
     >
       <
     </button>
@@ -79,7 +83,7 @@
     <button
       (click)="proximaPagina()"
       [disabled]="paginaAtual + 1 >= totalPaginas"
-      title="Ir para a próxima página"
+      title="Próximo"
     >
       >
     </button>

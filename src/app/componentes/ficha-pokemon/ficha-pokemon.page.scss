@@ -12,6 +12,7 @@
   background-color: #ffffff;
   transition: transform 0.3s;
   position: relative;
+  cursor: pointer;
 }
 
 .quadrado-pokemon:hover {
@@ -60,11 +61,14 @@
 }
 
 .cada-tipo {
-  padding: 4% 17%;
+  padding: 5px;
+  width: 80px;
   border-radius: 8px;
   font-size: 0.9em;
   color: #ffffff;
   text-transform: capitalize;
+  display: flex;
+  justify-content: center;
 }
 
 .normal {
@@ -74,7 +78,7 @@
   background-color: #e4352f;
 }
 .flying {
-  background-color: #e37cff;
+  background-color: #6181e8;
 }
 .poison {
   background-color: #9c48a9;
