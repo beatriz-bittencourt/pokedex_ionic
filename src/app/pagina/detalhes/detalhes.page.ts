@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonSpinner } from '@ionic/angular/standalone';
 import { CabecalhoComponent } from 'src/app/componentes/cabecalho/cabecalho.component';
 import { ActivatedRoute } from '@angular/router';
 import { PokemonService } from 'src/app/services/pokemon.service';
@@ -13,7 +13,14 @@ import { TratamentosService } from 'src/app/tratamento-erros/tratamentos.service
   templateUrl: './detalhes.page.html',
   styleUrls: ['./detalhes.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, CabecalhoComponent, IonIcon],
+  imports: [
+    IonContent,
+    IonIcon,
+    IonSpinner,
+    CommonModule,
+    FormsModule,
+    CabecalhoComponent,
+  ],
 })
 export class DetalhesPage implements OnInit {
   pokemon: any = {
@@ -37,6 +44,8 @@ export class DetalhesPage implements OnInit {
   paginaAtual = 1;
   totalPaginas = 1;
   favorito = false;
+
+  carregando = false; // flag para spinner
 
   constructor(
     private route: ActivatedRoute,
@@ -68,16 +77,15 @@ export class DetalhesPage implements OnInit {
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    if (!id) return;
-
-    try {
-      await this.tratamentoErro.mostrarLoading('Carregando...');
-      await this.carregarPokemon(+id);
-    } catch (e) {
-      this.tratamentoErro.mostrarErro('Erro ao carregar :(');
-      console.error(e);
-    } finally {
-      await this.tratamentoErro.esconderCarregando();
+    if (id) {
+      this.carregando = true;
+      try {
+        await this.carregarPokemon(+id);
+      } catch (e) {
+        this.tratamentoErro.mostrarErro('Erro ao carregar os Pokémon.');
+      } finally {
+        this.carregando = false;
+      }
     }
   }
 
@@ -100,28 +108,22 @@ export class DetalhesPage implements OnInit {
   }
 
   async carregarPokemon(id: number) {
-    try {
-      this.pokemon = await this.pokemonService.buscarPokemonPorId(id);
+    this.pokemon = await this.pokemonService.buscarPokemonPorId(id);
 
-      this.habilidades =
-        this.pokemon.habilidades?.map((h: any) => h.ability.name) || [];
-      this.fraquezas = this.pokemon.fraquezas || [];
-      this.resistencias = this.pokemon.resistencias || [];
-      this.imunidades =
-        this.pokemon.imunidades?.length > 0 ? this.pokemon.imunidades : ['-'];
-      this.movimentos = this.pokemon.moves || [];
+    this.habilidades =
+      this.pokemon.habilidades?.map((h: any) => h.ability.name) || [];
+    this.fraquezas = this.pokemon.fraquezas || [];
+    this.resistencias = this.pokemon.resistencias || [];
+    this.imunidades =
+      this.pokemon.imunidades?.length > 0 ? this.pokemon.imunidades : ['-'];
+    this.movimentos = this.pokemon.moves || [];
 
-      this.totalPaginas = Math.ceil(
-        this.movimentos.length / this.movimentosPorPagina
-      );
-      this.paginaAtual = 1;
+    this.totalPaginas = Math.ceil(
+      this.movimentos.length / this.movimentosPorPagina
+    );
+    this.paginaAtual = 1;
 
-      this.favorito = this.favoritosService.eFavorito(this.pokemon.id);
-    } catch (err) {
-      console.error('Erro ao buscar Pokémon', err);
-      this.pokemon = null;
-      throw err;
-    }
+    this.favorito = this.favoritosService.eFavorito(this.pokemon.id);
   }
 
   alternarFavorito() {

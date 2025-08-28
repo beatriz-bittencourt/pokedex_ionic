@@ -5,6 +5,7 @@ import {
   IonContent,
   IonSelect,
   IonSelectOption,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { FichaPokemonPage } from '../ficha-pokemon/ficha-pokemon.page';
 import { PokemonService } from '../../services/pokemon.service';
@@ -23,6 +24,7 @@ import { TratamentosService } from 'src/app/tratamento-erros/tratamentos.service
     FichaPokemonPage,
     IonSelect,
     IonSelectOption,
+    IonSpinner,
   ],
 })
 export class ListaPokemonPage implements OnInit {
@@ -62,10 +64,7 @@ export class ListaPokemonPage implements OnInit {
     private tratamentoErro: TratamentosService
   ) {
     this.router.events.subscribe((event) => {
-      if (
-        event instanceof NavigationEnd &&
-        this.router.url.includes('/lista-pokemon')
-      ) {
+      if (event instanceof NavigationEnd) {
         this.carregarTodosPokemons();
       }
     });
@@ -73,17 +72,13 @@ export class ListaPokemonPage implements OnInit {
 
   async ngOnInit() {
     try {
-      await this.tratamentoErro.mostrarLoading('Carregando...');
+      // await this.tratamentoErro.mostrarLoading('Carregando...');
       await this.carregarTodosPokemons();
     } catch (e) {
-      this.tratamentoErro.mostrarErro('Erro ao carregar :(');
+      this.tratamentoErro.mostrarErro('Erro ao carregar Pokémon.');
     } finally {
-      this.tratamentoErro.esconderCarregando();
+      // await this.tratamentoErro.esconderCarregando();
     }
-  }
-
-  ionViewWillEnter() {
-    this.carregarTodosPokemons();
   }
 
   async carregarTodosPokemons() {

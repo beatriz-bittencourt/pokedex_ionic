@@ -32,7 +32,12 @@
   </div>
 </div>
 
-<div class="grade-pokemons">
+<div class="spinner-central" *ngIf="pokemons.length === 0">
+  <ion-spinner name="bubbles"></ion-spinner>
+  <div>Carregando...</div>
+</div>
+
+<div class="grade-pokemons" *ngIf="pokemons.length > 0">
   <ng-container *ngFor="let pokemon of pokemonsPaginaAtual">
     <div class="pokemon-clicavel" (click)="abrirDetalhes(pokemon.id)">
       <app-ficha-pokemon
@@ -43,7 +48,7 @@
   </ng-container>
 </div>
 
-<div class="controle-paginas">
+<div class="controle-paginas" *ngIf="pokemons.length > 0">
   <div class="pokemon-por-pagina">
     <div>
       <span>Itens por página:</span>

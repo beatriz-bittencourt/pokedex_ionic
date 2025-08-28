@@ -1,146 +1,161 @@
 <app-cabecalho></app-cabecalho>
 
 <ion-content [fullscreen]="true">
-  <div class="centralizar-pagina">
-    <div class="detalhes-pagina" *ngIf="pokemon">
-      <div class="pokemon-detalhes">
-        <div
-          class="pokemon-imagem"
-          [ngStyle]="{ '--tipo-color': coresTipo[pokemon.tipos[0]] || '#d8d7b0' }"
-        >
-          <img [src]="pokemon.imagem" [alt]="pokemon.nome" />
-        </div>
-        <div class="individuais">
-          <div class="pokemon-nome">{{ pokemon.nome }}</div>
-          <div class="pokemon-numero-favorito">
-            <div class="pokemon-numero">#{{ pokemon.id | number:'3.0' }}</div>
-            <ion-icon
-              [name]="favorito ? 'heart' : 'heart-outline'"
-              class="icone-favorito"
-              (click)="alternarFavorito()"
-            ></ion-icon>
-          </div>
-          <div class="pokemon-tipos">
-            <span
-              *ngFor="let tipo of pokemon.tipos"
-              class="tipo"
-              [ngStyle]="{ 'background-color': coresTipo[tipo] || '#d8d7b0' }"
-            >
-              {{ tipo }}
-            </span>
-          </div>
-        </div>
-      </div>
+  <div *ngIf="carregando" class="spinner-central">
+    <ion-spinner name="bubbles"></ion-spinner>
+    <div>Carregando...</div>
+  </div>
 
-      <div class="pokemon-descricoes">
-        <div class="descricao-item peso-altura-genero">
-          <div class="peso">
-            <div class="titulo">Peso</div>
-            <div class="valor">{{ pokemon.peso ?? 'N/A' }} kg</div>
+  <div *ngIf="!carregando">
+    <div class="centralizar-pagina" *ngIf="pokemon">
+      <div class="detalhes-pagina">
+        <div class="pokemon-detalhes">
+          <div
+            class="pokemon-imagem"
+            [ngStyle]="{ '--tipo-color': coresTipo[pokemon.tipos[0]] || '#d8d7b0' }"
+          >
+            <img [src]="pokemon.imagem" [alt]="pokemon.nome" />
           </div>
-
-          <div class="altura">
-            <div class="titulo">Altura</div>
-            <div class="valor">{{ pokemon.altura ?? 'N/A' }} m</div>
-          </div>
-
-          <div class="genero">
-            <div class="titulo">Gênero</div>
-
-            <div class="generos">
-              <div class="masculino" title="Masculino">
-                {{ pokemon.masculino }}%
-              </div>
-              <div class="feminino" title="Feminino">
-                {{ pokemon.feminino }}%
-              </div>
+          <div class="individuais">
+            <div class="pokemon-nome">{{ pokemon.nome }}</div>
+            <div class="pokemon-numero-favorito">
+              <div class="pokemon-numero">#{{ pokemon.id | number:'3.0' }}</div>
+              <ion-icon
+                [name]="favorito ? 'heart' : 'heart-outline'"
+                class="icone-favorito"
+                (click)="alternarFavorito()"
+              ></ion-icon>
+            </div>
+            <div class="pokemon-tipos">
+              <span
+                *ngFor="let tipo of pokemon.tipos"
+                class="tipo"
+                [ngStyle]="{ 'background-color': coresTipo[tipo] || '#d8d7b0' }"
+              >
+                {{ tipo }}
+              </span>
             </div>
           </div>
         </div>
 
-        <div
-          class="descricao-abaixo habilidades"
-          *ngIf="habilidades.length > 0"
-        >
-          <h3>Possíveis Habilidades</h3>
+        <div class="pokemon-descricoes">
+          <div class="descricao-item peso-altura-genero">
+            <div class="peso">
+              <div class="titulo">Peso</div>
+              <div class="valor">{{ pokemon.peso ?? 'N/A' }} kg</div>
+            </div>
 
-          <div class="parte-tipos">
-            <span *ngFor="let hab of habilidades" class="tipo">{{ hab }}</span>
+            <div class="altura">
+              <div class="titulo">Altura</div>
+              <div class="valor">{{ pokemon.altura ?? 'N/A' }} m</div>
+            </div>
+
+            <div class="genero">
+              <div class="titulo">Gênero</div>
+
+              <div class="generos">
+                <div class="masculino" title="Masculino">
+                  {{ pokemon.masculino }}%
+                </div>
+                <div class="feminino" title="Feminino">
+                  {{ pokemon.feminino }}%
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="descricao-abaixo fraquezas" *ngIf="fraquezas.length > 0">
-          <h3>Fraquezas</h3>
-          <div class="parte-tipos">
-            <span *ngFor="let fraq of fraquezas" class="tipo">{{ fraq }}</span>
+          <div
+            class="descricao-abaixo habilidades"
+            *ngIf="habilidades.length > 0"
+          >
+            <h3>Possíveis Habilidades</h3>
+
+            <div class="parte-tipos">
+              <span *ngFor="let hab of habilidades" class="tipo"
+                >{{ hab }}</span
+              >
+            </div>
           </div>
-        </div>
 
-        <div
-          class="descricao-abaixo resistencias"
-          *ngIf="resistencias.length > 0"
-        >
-          <h3>Resistências</h3>
-          <div class="parte-tipos">
-            <span *ngFor="let resis of resistencias" class="tipo"
-              >{{ resis }}</span
-            >
+          <div class="descricao-abaixo fraquezas" *ngIf="fraquezas.length > 0">
+            <h3>Fraquezas</h3>
+            <div class="parte-tipos">
+              <span *ngFor="let fraq of fraquezas" class="tipo"
+                >{{ fraq }}</span
+              >
+            </div>
           </div>
-        </div>
 
-        <div class="descricao-abaixo imunidades" *ngIf="imunidades.length > 0">
-          <h3>Imunidades</h3>
-          <div class="parte-tipos">
-            <span *ngFor="let imu of imunidades" class="tipo">{{ imu }}</span>
+          <div
+            class="descricao-abaixo resistencias"
+            *ngIf="resistencias.length > 0"
+          >
+            <h3>Resistências</h3>
+            <div class="parte-tipos">
+              <span *ngFor="let resis of resistencias" class="tipo"
+                >{{ resis }}</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="descricao-abaixo imunidades"
+            *ngIf="imunidades.length > 0"
+          >
+            <h3>Imunidades</h3>
+            <div class="parte-tipos">
+              <span *ngFor="let imu of imunidades" class="tipo">{{ imu }}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="movimentos">
-      <h3 (click)="alternarMovimentos()" style="cursor: pointer">
-        Movimentos aprendíveis
-        <span>{{ mostrarMovimentos ? '▲' : '▼' }}</span>
-      </h3>
+      <div class="movimentos">
+        <h3 (click)="alternarMovimentos()" style="cursor: pointer">
+          Movimentos aprendíveis
+          <span>{{ mostrarMovimentos ? '▲' : '▼' }}</span>
+        </h3>
 
-      <div *ngIf="mostrarMovimentos" class="movimentos-conteudo">
-        <table>
-          <thead>
-            <tr>
-              <th>Índice</th>
-              <th>Nome</th>
-              <th>Método de aprendizado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let mov of movimentosPaginaAtual; let i = index">
-              <td>{{ (paginaAtual - 1) * movimentosPorPagina + i + 1 }}</td>
-              <td>{{ mov.nome }}</td>
-              <td>{{ mov.move_learn_method }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div *ngIf="mostrarMovimentos" class="movimentos-conteudo">
+          <table>
+            <thead>
+              <tr>
+                <th>Índice</th>
+                <th>Nome</th>
+                <th>Método de aprendizado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let mov of movimentosPaginaAtual; let i = index">
+                <td>{{ (paginaAtual - 1) * movimentosPorPagina + i + 1 }}</td>
+                <td>{{ mov.nome }}</td>
+                <td>{{ mov.move_learn_method }}</td>
+              </tr>
+            </tbody>
+          </table>
 
-        <div class="paginacao">
-          <button
-            title="Ir para a página anterior"
-            (click)="irParaPaginaAnterior()"
-            [disabled]="paginaAtual === 1"
-          >
-            &lt;
-          </button>
-          <span>
-            {{ (paginaAtual - 1) * movimentosPorPagina + 1 }} - {{ ((paginaAtual
-            * movimentosPorPagina) > movimentos.length ? movimentos.length :
-            paginaAtual * movimentosPorPagina) }} de {{ movimentos.length }}
-          </span>
-          <button
-            title="Ir para a próxima página"
-            (click)="irParaProximaPagina()"
-            [disabled]="paginaAtual === totalPaginas"
-          >
-            &gt;
-          </button>
+          <div class="paginacao">
+            <button
+              title="Ir para a página anterior"
+              (click)="irParaPaginaAnterior()"
+              [disabled]="paginaAtual === 1"
+            >
+              &lt;
+            </button>
+            <span>
+              {{ (paginaAtual - 1) * movimentosPorPagina + 1 }} - {{
+              ((paginaAtual * movimentosPorPagina) > movimentos.length ?
+              movimentos.length : paginaAtual * movimentosPorPagina) }} de {{
+              movimentos.length }}
+            </span>
+            <button
+              title="Ir para a próxima página"
+              (click)="irParaProximaPagina()"
+              [disabled]="paginaAtual === totalPaginas"
+            >
+              &gt;
+            </button>
+          </div>
         </div>
       </div>
     </div>
