@@ -59,14 +59,14 @@
     <button
       (click)="irParaPagina(1)"
       [disabled]="paginaAtual === 0"
-      title="Primeira página"
+      title="Ir para a primeira página"
     >
       <<
     </button>
     <button
       (click)="paginaAnterior()"
       [disabled]="paginaAtual === 0"
-      title="Página anterior"
+      title="Ir para a página anterior"
     >
       <
     </button>
@@ -74,14 +74,14 @@
     <button
       (click)="proximaPagina()"
       [disabled]="paginaAtual + 1 >= totalPaginas"
-      title="Próxima página"
+      title="Ir para a próxima página"
     >
       >
     </button>
     <button
       (click)="irParaPagina(totalPaginas)"
       [disabled]="paginaAtual + 1 >= totalPaginas"
-      title="Última página"
+      title="Ir para a última página"
     >
       >>
     </button>

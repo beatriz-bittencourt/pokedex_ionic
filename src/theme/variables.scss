@@ -13,3 +13,15 @@
   --background: var(--ion-color-vermelho);
   --color: var(--ion-color-vermelho-contrast);
 }
+
+.carregar .loading-wrapper {
+  --background: #ffffff;
+  border-radius: 20px !important;
+  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0) !important;
+}
+
+.carregar .loading-content {
+  color: #0000008c;
+  font-size: 16px;
+  font-weight: 500;
+}

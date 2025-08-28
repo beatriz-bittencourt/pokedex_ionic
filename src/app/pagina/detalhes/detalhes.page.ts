@@ -6,6 +6,7 @@ import { CabecalhoComponent } from 'src/app/componentes/cabecalho/cabecalho.comp
 import { ActivatedRoute } from '@angular/router';
 import { PokemonService } from 'src/app/services/pokemon.service';
 import { FavoritosService } from 'src/app/services/favoritos.service';
+import { TratamentosService } from 'src/app/tratamento-erros/tratamentos.service';
 
 @Component({
   selector: 'app-detalhes',
@@ -32,7 +33,7 @@ export class DetalhesPage implements OnInit {
   movimentos: any[] = [];
   mostrarMovimentos = false;
 
-  movimentosPorPagina = 15;
+  movimentosPorPagina = 10;
   paginaAtual = 1;
   totalPaginas = 1;
   favorito = false;
@@ -40,7 +41,8 @@ export class DetalhesPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private pokemonService: PokemonService,
-    private favoritosService: FavoritosService
+    private favoritosService: FavoritosService,
+    private tratamentoErro: TratamentosService
   ) {}
 
   coresTipo: any = {
@@ -64,10 +66,17 @@ export class DetalhesPage implements OnInit {
     fairy: '#f5b4d9',
   };
 
-  ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.carregarPokemon(+id);
+  async ngOnInit() {
+    try {
+      await this.tratamentoErro.mostrarLoading('Carregando...');
+      const id = this.route.snapshot.paramMap.get('id');
+      if (id) {
+        await this.carregarPokemon(+id);
+      }
+    } catch (e) {
+      this.tratamentoErro.mostrarErro('Erro ao carregar os Pokémon.');
+    } finally {
+      await this.tratamentoErro.esconderCarregando();
     }
   }
 

@@ -10,6 +10,7 @@ import { FichaPokemonPage } from '../ficha-pokemon/ficha-pokemon.page';
 import { PokemonService } from '../../services/pokemon.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { FavoritosService } from '../../services/favoritos.service';
+import { TratamentosService } from 'src/app/tratamento-erros/tratamentos.service';
 
 @Component({
   selector: 'app-lista-pokemon',
@@ -57,7 +58,8 @@ export class ListaPokemonPage implements OnInit {
   constructor(
     private pokemonService: PokemonService,
     private favoritosService: FavoritosService,
-    private router: Router
+    private router: Router,
+    private tratamentoErro: TratamentosService
   ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -67,7 +69,14 @@ export class ListaPokemonPage implements OnInit {
   }
 
   async ngOnInit() {
-    await this.carregarTodosPokemons();
+    try {
+      await this.tratamentoErro.mostrarLoading('Carregando...');
+      await this.carregarTodosPokemons();
+    } catch (e) {
+      this.tratamentoErro.mostrarErro('Erro ao carregar :(');
+    } finally {
+      this.tratamentoErro.esconderCarregando();
+    }
   }
 
   ionViewWillEnter() {
@@ -220,24 +229,5 @@ export class ListaPokemonPage implements OnInit {
       this.totalPokemons
     );
     return `${inicio}-${fim} de ${this.totalPokemons}`;
-  }
-
-  getPaginasVisiveis(): (number | string)[] {
-    const paginas: (number | string)[] = [];
-    const total = this.totalPaginas;
-    const atual = this.paginaAtual + 1;
-
-    if (total <= 7) {
-      for (let i = 1; i <= total; i++) paginas.push(i);
-    } else {
-      if (atual <= 3) {
-        paginas.push(1, 2, 3, 4, '...', total);
-      } else if (atual >= total - 2) {
-        paginas.push(1, '...', total - 3, total - 2, total - 1, total);
-      } else {
-        paginas.push(1, '...', atual - 1, atual, atual + 1, '...', total);
-      }
-    }
-    return paginas;
   }
 }

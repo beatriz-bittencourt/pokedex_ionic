@@ -21,7 +21,11 @@
             ></ion-icon>
           </div>
           <div class="pokemon-tipos">
-            <span *ngFor="let tipo of pokemon.tipos" class="tipo">
+            <span
+              *ngFor="let tipo of pokemon.tipos"
+              class="tipo"
+              [ngStyle]="{ 'background-color': coresTipo[tipo] || '#d8d7b0' }"
+            >
               {{ tipo }}
             </span>
           </div>
@@ -31,17 +35,17 @@
       <div class="pokemon-descricoes">
         <div class="descricao-item peso-altura-genero">
           <div class="peso">
-            <div class="titulo">PESO</div>
+            <div class="titulo">Peso</div>
             <div class="valor">{{ pokemon.peso ?? 'N/A' }} kg</div>
           </div>
 
           <div class="altura">
-            <div class="titulo">ALTURA</div>
+            <div class="titulo">Altura</div>
             <div class="valor">{{ pokemon.altura ?? 'N/A' }} m</div>
           </div>
 
           <div class="genero">
-            <div class="titulo">GÊNERO</div>
+            <div class="titulo">Gênero</div>
 
             <div class="generos">
               <div class="masculino" title="Masculino">
@@ -119,6 +123,7 @@
 
         <div class="paginacao">
           <button
+            title="Ir para a página anterior"
             (click)="irParaPaginaAnterior()"
             [disabled]="paginaAtual === 1"
           >
@@ -130,6 +135,7 @@
             paginaAtual * movimentosPorPagina) }} de {{ movimentos.length }}
           </span>
           <button
+            title="Ir para a próxima página"
             (click)="irParaProximaPagina()"
             [disabled]="paginaAtual === totalPaginas"
           >
