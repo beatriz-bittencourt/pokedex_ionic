@@ -20,13 +20,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 8px 12px;
-  background-color: #f0f0f0;
+  padding: 12px 15px;
+  background-color: #dcdcdc;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
-  margin: 20px 0 0 20px;
+  margin: 25px 0 0 80px;
 }
 
 .botao-voltar:hover {
@@ -98,7 +98,19 @@
   justify-content: center;
   gap: 20px;
 }
+.botao-shiny {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background-color: #ffd700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
 
+.botao-shiny:hover {
+  background-color: #ffec70;
+}
 .pokemon-descricoes {
   display: flex;
   flex-direction: column;
@@ -193,12 +205,16 @@
   margin: 30px 0 50px 0;
   border: 2px solid rgb(240, 240, 240);
   border-radius: 30px;
+  padding: 5px;
 }
 
 .movimentos h3 {
   width: 900px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 28%;
+  margin-right: 50px;
 }
 
 .movimentos-conteudo {
@@ -277,6 +293,11 @@ th {
   color: red;
   cursor: pointer;
 }
+.peso-altura-genero ion-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+  color: #ff6666;
+}
 
 @media (max-width: 1200px) {
   .detalhes-pagina {
@@ -295,6 +316,11 @@ th {
 
   .movimentos {
     width: 600px;
+  }
+
+  .movimentos h3 {
+    width: 600px;
+    gap: 16%;
   }
 }
 
@@ -336,5 +362,18 @@ th {
 
   .movimentos {
     width: 300px;
+    padding-right: 20px;
+  }
+
+  .movimentos h3 {
+    width: 300px;
+    font-size: 15px;
+    gap: 10px;
+    margin: 3px 0;
+  }
+
+  .habilidades h3 {
+    text-align: center;
+    line-height: 1.2;
   }
 }

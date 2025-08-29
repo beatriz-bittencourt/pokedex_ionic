@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,6 +12,7 @@ import { PokemonService } from '../../services/pokemon.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { FavoritosService } from '../../services/favoritos.service';
 import { TratamentosService } from 'src/app/tratamento-erros/tratamentos.service';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-lista-pokemon',
@@ -27,7 +28,7 @@ import { TratamentosService } from 'src/app/tratamento-erros/tratamentos.service
     IonSpinner,
   ],
 })
-export class ListaPokemonPage implements OnInit {
+export class ListaPokemonPage implements OnInit, AfterViewChecked {
   todosPokemons: any[] = [];
   pokemons: any[] = [];
 
@@ -60,10 +61,12 @@ export class ListaPokemonPage implements OnInit {
     this._procuraTexto = value;
     this.paginaAtual = 0;
     this.carregarPaginaAtual();
-    this.scrollParaTopo();
+    this.scrollPending = true;
   }
 
-  @ViewChild(IonContent) conteudo!: IonContent;
+  @ViewChild('conteudo', { static: false }) conteudo!: IonContent;
+  @Output() scrollTop = new EventEmitter<void>();
+  private scrollPending = false;
 
   constructor(
     private pokemonService: PokemonService,
@@ -74,6 +77,7 @@ export class ListaPokemonPage implements OnInit {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.carregarPaginaAtual();
+        this.scrollPending = true;
       }
     });
   }
@@ -83,6 +87,13 @@ export class ListaPokemonPage implements OnInit {
       await this.carregarPaginaAtual();
     } catch (e) {
       this.tratamentoErro.mostrarErro('Erro ao carregar Pokémon :(');
+    }
+  }
+
+  ngAfterViewChecked() {
+    if (this.scrollPending) {
+      this.scrollParaTopo();
+      this.scrollPending = false;
     }
   }
 
@@ -168,7 +179,6 @@ export class ListaPokemonPage implements OnInit {
       this.tratamentoErro.mostrarErro('Erro ao carregar Pokémon :(');
     } finally {
       this.loading = false;
-      this.scrollParaTopo();
     }
   }
 
@@ -209,6 +219,7 @@ export class ListaPokemonPage implements OnInit {
   limparPesquisa() {
     this.procuraTexto = '';
     this.paginaAtual = 0;
+    this.scrollPending = true;
     this.carregarPaginaAtual();
   }
 
@@ -217,7 +228,7 @@ export class ListaPokemonPage implements OnInit {
   }
 
   scrollParaTopo() {
-    if (this.conteudo) this.conteudo.scrollToTop(200);
+    this.scrollTop.emit();
   }
 
   favoritar(pokemon: any) {
@@ -238,6 +249,7 @@ export class ListaPokemonPage implements OnInit {
   proximaPagina() {
     if (this.paginaAtual + 1 < this.totalPaginas) {
       this.paginaAtual++;
+      this.scrollPending = true;
       this.carregarPaginaAtual();
     }
   }
@@ -245,6 +257,7 @@ export class ListaPokemonPage implements OnInit {
   paginaAnterior() {
     if (this.paginaAtual > 0) {
       this.paginaAtual--;
+      this.scrollPending = true;
       this.carregarPaginaAtual();
     }
   }
@@ -252,6 +265,7 @@ export class ListaPokemonPage implements OnInit {
   mudarLimite() {
     this.paginaAtual = 0;
     this.limitePorPagina = Number(this.limitePorPagina) || 15;
+    this.scrollPending = true;
     this.carregarPaginaAtual();
   }
 
@@ -261,11 +275,13 @@ export class ListaPokemonPage implements OnInit {
 
   irParaPagina(num: number) {
     this.paginaAtual = num - 1;
+    this.scrollPending = true;
     this.carregarPaginaAtual();
   }
 
   quandoMudarOrdenacao() {
     this.paginaAtual = 0;
+    this.scrollPending = true;
     this.carregarPaginaAtual();
   }
 

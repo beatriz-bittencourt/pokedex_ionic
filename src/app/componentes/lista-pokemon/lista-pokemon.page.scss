@@ -52,15 +52,14 @@
 .controle-paginas button,
 .reticencias {
   background-color: white;
-  color: rgb(105, 105, 105);
+  color: rgb(68, 68, 68);
   font-size: 1em;
-  padding: 5px 8px;
+  padding: 0px 8px;
   border: none;
   margin: 0 2%;
 }
 
 .controle-paginas button:disabled {
-  background-color: #e9e9e9;
   color: #c0c0c0;
   cursor: not-allowed;
 }
@@ -75,7 +74,9 @@
 .controle-paginas span {
   margin: 0 4px;
 }
-
+.item-pagina {
+  border-radius: 8px;
+}
 .pesquisa-ordenacao {
   display: flex;
   justify-content: flex-end;
@@ -87,6 +88,7 @@
 .ordenacao {
   display: flex;
   align-items: center;
+  gap: 5px;
 }
 
 .span-ordenacao {

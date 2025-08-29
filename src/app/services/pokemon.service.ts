@@ -89,6 +89,7 @@ export class PokemonService {
       id: dados.id,
       nome: dados.name,
       imagem: dados.sprites.other['official-artwork'].front_default,
+      imagemShiny: dados.sprites.other['official-artwork'].front_shiny,
       tipos: dados.types.map((t: any) => t.type.name),
       peso: dados.weight / 10,
       altura: dados.height / 10,

@@ -58,7 +58,11 @@
   <div class="pokemon-por-pagina">
     <div>
       <span>Itens por página:</span>
-      <select [(ngModel)]="limitePorPagina" (change)="mudarLimite()">
+      <select
+        [(ngModel)]="limitePorPagina"
+        class="item-pagina"
+        (change)="mudarLimite()"
+      >
         <option *ngFor="let op of opcoesLimite" [ngValue]="op">{{ op }}</option>
       </select>
     </div>

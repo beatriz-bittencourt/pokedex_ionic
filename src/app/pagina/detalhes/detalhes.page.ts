@@ -83,6 +83,12 @@ export class DetalhesPage implements OnInit {
     this.navCtrl.back();
   }
 
+  mostrarShiny = false;
+
+  alternarShiny() {
+    this.mostrarShiny = !this.mostrarShiny;
+  }
+
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -104,17 +110,19 @@ export class DetalhesPage implements OnInit {
   alternarOrdenacaoIndice() {
     this.nomeOrdenacao = 'padrao';
     this.metodoOrdenacao = 'padrao';
+
     switch (this.indiceOrdenacao) {
       case 'padrao':
-        this.indiceOrdenacao = 'decrescente';
-        break;
-      case 'decrescente':
         this.indiceOrdenacao = 'crescente';
         break;
       case 'crescente':
+        this.indiceOrdenacao = 'decrescente';
+        break;
+      case 'decrescente':
         this.indiceOrdenacao = 'padrao';
         break;
     }
+
     this.paginaAtual = 1;
   }
 

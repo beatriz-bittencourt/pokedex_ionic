@@ -47,3 +47,8 @@ ion-select {
 ion-select::part(icon) {
   color: #666 !important;
 }
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap");
+
+* {
+  font-family: "Lexend", sans-serif;
+}

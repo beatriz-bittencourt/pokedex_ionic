@@ -7,7 +7,7 @@
   </div>
 
   <div *ngIf="!carregando">
-    <button class="botao-voltar" (click)="voltar()">⭠</button>
+    <button class="botao-voltar" (click)="voltar()" title="Voltar">🠔</button>
     <div class="centralizar-pagina" *ngIf="pokemon">
       <div class="detalhes-pagina">
         <div class="pokemon-detalhes">
@@ -15,7 +15,10 @@
             class="pokemon-imagem"
             [ngStyle]="{ '--tipo-color': coresTipo[pokemon.tipos[0]] || '#d8d7b0' }"
           >
-            <img [src]="pokemon.imagem" [alt]="pokemon.nome" />
+            <img
+              [src]="mostrarShiny && pokemon.imagemShiny ? pokemon.imagemShiny : pokemon.imagem"
+              [alt]="pokemon.nome"
+            />
           </div>
           <div class="individuais">
             <div class="pokemon-nome">{{ pokemon.nome }}</div>
@@ -37,6 +40,9 @@
                 {{ tipo }}
               </span>
             </div>
+            <button class="botao-shiny" (click)="alternarShiny()">
+              {{ mostrarShiny ? 'Mostrar Normal' : 'Mostrar Shiny' }}
+            </button>
           </div>
         </div>
 
@@ -130,28 +136,27 @@
         <h3 (click)="alternarMovimentos()" style="cursor: pointer">
           Movimentos que pode aprender
           <span style="margin-left: 10px"
-            >{{ mostrarMovimentos ? ' ^' : ' v' }}</span
+            >{{ mostrarMovimentos ? '⮝' : '⮟' }}</span
           >
         </h3>
-
         <div *ngIf="mostrarMovimentos" class="movimentos-conteudo">
           <table>
             <thead>
               <tr>
                 <th (click)="alternarOrdenacaoIndice()" style="cursor: pointer">
                   Índice
-                  <span *ngIf="indiceOrdenacao === 'crescente'"> ^</span>
-                  <span *ngIf="indiceOrdenacao === 'decrescente'"> v</span>
+                  <span *ngIf="indiceOrdenacao === 'crescente'"> 🠕</span>
+                  <span *ngIf="indiceOrdenacao === 'decrescente'"> 🠗</span>
                 </th>
                 <th (click)="alternarOrdenacaoNome()" style="cursor: pointer">
                   Nome
-                  <span *ngIf="nomeOrdenacao === 'crescente'"> ^</span>
-                  <span *ngIf="nomeOrdenacao === 'decrescente'"> v</span>
+                  <span *ngIf="nomeOrdenacao === 'crescente'"> 🠕</span>
+                  <span *ngIf="nomeOrdenacao === 'decrescente'"> 🠗</span>
                 </th>
                 <th (click)="alternarOrdenacaoMetodo()" style="cursor: pointer">
                   Método de aprendizado
-                  <span *ngIf="metodoOrdenacao === 'crescente'"> ^</span>
-                  <span *ngIf="metodoOrdenacao === 'decrescente'"> v</span>
+                  <span *ngIf="metodoOrdenacao === 'crescente'"> 🠕</span>
+                  <span *ngIf="metodoOrdenacao === 'decrescente'"> 🠗</span>
                 </th>
               </tr>
             </thead>

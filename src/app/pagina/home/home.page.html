@@ -1,4 +1,6 @@
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" #conteudo>
   <app-cabecalho></app-cabecalho>
-  <app-lista-pokemon></app-lista-pokemon>
+  <app-lista-pokemon
+    (scrollTop)="conteudo.scrollToTop(200)"
+  ></app-lista-pokemon>
 </ion-content>
