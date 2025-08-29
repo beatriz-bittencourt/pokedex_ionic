@@ -22,22 +22,56 @@
 h1 {
   display: flex;
   justify-content: center;
-  margin: 0 0 2% 0;
+  margin: 50px 0 20px 0;
 }
 
 .sem-favoritos {
   margin-top: 10%;
 }
-.botao-voltar {
-  display: inline-flex;
+
+.paginas-visiveis {
+  display: flex;
+  justify-content: center;
+  width: 100px;
+}
+.controle-paginas {
+  display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding: 8px 12px;
-  margin-bottom: 16px;
-  background-color: #f0f0f0;
+  justify-content: center;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding: 10px 0;
+  background-color: #ffffff;
+  gap: 50px;
+  box-shadow: 0 -2px 6px rgba(15, 15, 15, 0.1);
+  z-index: 10;
+}
+
+.controle-paginas button,
+.reticencias {
+  background-color: white;
+  color: rgb(105, 105, 105);
+  font-size: 1em;
+  padding: 5px 8px;
   border: none;
+  margin: 0 2%;
+}
+
+.controle-paginas button:disabled {
+  background-color: #e9e9e9;
+  color: #c0c0c0;
+  cursor: not-allowed;
+}
+
+.controle-paginas button.ativo {
+  background-color: var(--ion-color-vermelho);
+  color: #ffffff;
+  font-weight: bold;
   border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  margin: 20px 0 0 20px;
+}
+
+.controle-paginas span {
+  margin: 0 4px;
 }

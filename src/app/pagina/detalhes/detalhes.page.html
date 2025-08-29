@@ -7,7 +7,7 @@
   </div>
 
   <div *ngIf="!carregando">
-    <button class="botao-voltar" (click)="voltarHome()">⭠</button>
+    <button class="botao-voltar" (click)="voltar()">⭠</button>
     <div class="centralizar-pagina" *ngIf="pokemon">
       <div class="detalhes-pagina">
         <div class="pokemon-detalhes">
@@ -22,6 +22,7 @@
             <div class="pokemon-numero-favorito">
               <div class="pokemon-numero">#{{ pokemon.id | number:'3.0' }}</div>
               <ion-icon
+                title="Favoritar/Desfavoritar"
                 [name]="favorito ? 'heart' : 'heart-outline'"
                 class="icone-favorito"
                 (click)="alternarFavorito()"
@@ -128,26 +129,41 @@
       <div class="movimentos">
         <h3 (click)="alternarMovimentos()" style="cursor: pointer">
           Movimentos que pode aprender
-          <span>{{ mostrarMovimentos ? ' ⇧' : ' ⇩' }}</span>
+          <span style="margin-left: 10px"
+            >{{ mostrarMovimentos ? ' ^' : ' v' }}</span
+          >
         </h3>
+
         <div *ngIf="mostrarMovimentos" class="movimentos-conteudo">
           <table>
             <thead>
               <tr>
-                <th>Índice</th>
-                <th>Nome</th>
-                <th>Método de aprendizado</th>
+                <th (click)="alternarOrdenacaoIndice()" style="cursor: pointer">
+                  Índice
+                  <span *ngIf="indiceOrdenacao === 'crescente'"> ^</span>
+                  <span *ngIf="indiceOrdenacao === 'decrescente'"> v</span>
+                </th>
+                <th (click)="alternarOrdenacaoNome()" style="cursor: pointer">
+                  Nome
+                  <span *ngIf="nomeOrdenacao === 'crescente'"> ^</span>
+                  <span *ngIf="nomeOrdenacao === 'decrescente'"> v</span>
+                </th>
+                <th (click)="alternarOrdenacaoMetodo()" style="cursor: pointer">
+                  Método de aprendizado
+                  <span *ngIf="metodoOrdenacao === 'crescente'"> ^</span>
+                  <span *ngIf="metodoOrdenacao === 'decrescente'"> v</span>
+                </th>
               </tr>
             </thead>
+
             <tbody>
               <tr *ngFor="let mov of movimentosPaginaAtual; let i = index">
-                <td>{{ (paginaAtual - 1) * movimentosPorPagina + i + 1 }}</td>
+                <td>{{ getIndiceReal(i) }}</td>
                 <td>{{ mov.nome }}</td>
                 <td>{{ mov.move_learn_method }}</td>
               </tr>
             </tbody>
           </table>
-
           <div class="paginacao">
             <button
               title="Anterior"
@@ -158,7 +174,7 @@
             </button>
             <span>
               {{ (paginaAtual - 1) * movimentosPorPagina + 1 }} - {{
-              ((paginaAtual * movimentosPorPagina) > movimentos.length ?
+              (paginaAtual * movimentosPorPagina > movimentos.length ?
               movimentos.length : paginaAtual * movimentosPorPagina) }} de {{
               movimentos.length }}
             </span>

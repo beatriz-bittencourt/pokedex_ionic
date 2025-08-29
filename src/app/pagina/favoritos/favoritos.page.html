@@ -1,8 +1,8 @@
 <app-cabecalho></app-cabecalho>
 
-<ion-content
-  ><button class="botao-voltar" (click)="voltarHome()">⭠</button>
+<ion-content>
   <h1 class="titulo-pagina">Favoritos</h1>
+
   <div class="centralizar">
     <div class="grade-pokemons">
       <ng-container *ngFor="let pokemon of favoritos">
@@ -17,6 +17,42 @@
       <div *ngIf="favoritos.length === 0" class="sem-favoritos">
         Nenhum Pokémon favoritado ainda.
       </div>
+    </div>
+  </div>
+
+  <div class="controle-paginas" *ngIf="todosFavoritos.length > 0">
+    <div class="intervalo-exibicao">{{ intervaloExibicao }}</div>
+
+    <div class="paginas-visiveis">
+      <button
+        (click)="irParaPagina(1)"
+        [disabled]="paginaAtual === 0"
+        title="Primeira página"
+      >
+        <<
+      </button>
+      <button
+        (click)="paginaAnterior()"
+        [disabled]="paginaAtual === 0"
+        title="Anterior"
+      >
+        <
+      </button>
+      <span class="pagina-atual">{{ paginaAtual + 1 }}</span>
+      <button
+        (click)="proximaPagina()"
+        [disabled]="paginaAtual + 1 >= totalPaginas"
+        title="Próximo"
+      >
+        >
+      </button>
+      <button
+        (click)="irParaPagina(totalPaginas)"
+        [disabled]="paginaAtual + 1 >= totalPaginas"
+        title="Última página"
+      >
+        >>
+      </button>
     </div>
   </div>
 </ion-content>

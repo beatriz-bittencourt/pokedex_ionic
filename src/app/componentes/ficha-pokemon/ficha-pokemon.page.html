@@ -3,6 +3,7 @@
     <div class="numero-pokemon">#{{ pokemon.id | number:'3.0' }}</div>
     <ion-icon
       class="coracao"
+      title="Favoritar/Desfavoritar"
       [name]="pokemon.favorito ? 'heart' : 'heart-outline'"
       [color]="pokemon.favorito ? 'danger' : 'medium'"
       (click)="$event.stopPropagation(); favoritar(pokemon)"

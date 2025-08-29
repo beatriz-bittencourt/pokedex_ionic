@@ -46,7 +46,9 @@ export class DetalhesPage implements OnInit {
   totalPaginas = 1;
   favorito = false;
 
-  carregando = false;
+  indiceOrdenacao: 'padrao' | 'crescente' | 'decrescente' = 'padrao';
+  nomeOrdenacao: 'padrao' | 'crescente' | 'decrescente' = 'padrao';
+  metodoOrdenacao: 'padrao' | 'crescente' | 'decrescente' = 'padrao';
 
   constructor(
     private route: ActivatedRoute,
@@ -77,8 +79,8 @@ export class DetalhesPage implements OnInit {
     fairy: '#f5b4d9',
   };
 
-  voltarHome() {
-    this.navCtrl.navigateRoot('/home');
+  voltar() {
+    this.navCtrl.back();
   }
 
   async ngOnInit() {
@@ -88,7 +90,7 @@ export class DetalhesPage implements OnInit {
       try {
         await this.carregarPokemon(+id);
       } catch (e) {
-        this.tratamentoErro.mostrarErro('Erro ao carregar os Pokémon.');
+        this.tratamentoErro.mostrarErro('Erro ao carregar :(');
       } finally {
         this.carregando = false;
       }
@@ -99,10 +101,86 @@ export class DetalhesPage implements OnInit {
     this.mostrarMovimentos = !this.mostrarMovimentos;
   }
 
+  alternarOrdenacaoIndice() {
+    this.nomeOrdenacao = 'padrao';
+    this.metodoOrdenacao = 'padrao';
+    switch (this.indiceOrdenacao) {
+      case 'padrao':
+        this.indiceOrdenacao = 'decrescente';
+        break;
+      case 'decrescente':
+        this.indiceOrdenacao = 'crescente';
+        break;
+      case 'crescente':
+        this.indiceOrdenacao = 'padrao';
+        break;
+    }
+    this.paginaAtual = 1;
+  }
+
+  alternarOrdenacaoNome() {
+    this.indiceOrdenacao = 'padrao';
+    this.metodoOrdenacao = 'padrao';
+    switch (this.nomeOrdenacao) {
+      case 'padrao':
+        this.nomeOrdenacao = 'crescente';
+        break;
+      case 'crescente':
+        this.nomeOrdenacao = 'decrescente';
+        break;
+      case 'decrescente':
+        this.nomeOrdenacao = 'padrao';
+        break;
+    }
+    this.paginaAtual = 1;
+  }
+
+  alternarOrdenacaoMetodo() {
+    this.indiceOrdenacao = 'padrao';
+    this.nomeOrdenacao = 'padrao';
+    switch (this.metodoOrdenacao) {
+      case 'padrao':
+        this.metodoOrdenacao = 'crescente';
+        break;
+      case 'crescente':
+        this.metodoOrdenacao = 'decrescente';
+        break;
+      case 'decrescente':
+        this.metodoOrdenacao = 'padrao';
+        break;
+    }
+    this.paginaAtual = 1;
+  }
+
   get movimentosPaginaAtual(): any[] {
+    let lista: any[] = [...this.movimentos];
+
+    if (this.indiceOrdenacao === 'crescente')
+      lista.sort((a, b) => a.indiceOriginal - b.indiceOriginal);
+    else if (this.indiceOrdenacao === 'decrescente')
+      lista.sort((a, b) => b.indiceOriginal - a.indiceOriginal);
+
+    if (this.nomeOrdenacao === 'crescente')
+      lista.sort((a, b) => a.nome.localeCompare(b.nome));
+    else if (this.nomeOrdenacao === 'decrescente')
+      lista.sort((a, b) => b.nome.localeCompare(a.nome));
+
+    if (this.metodoOrdenacao === 'crescente')
+      lista.sort((a, b) =>
+        a.move_learn_method.localeCompare(b.move_learn_method)
+      );
+    else if (this.metodoOrdenacao === 'decrescente')
+      lista.sort((a, b) =>
+        b.move_learn_method.localeCompare(a.move_learn_method)
+      );
+
     const start = (this.paginaAtual - 1) * this.movimentosPorPagina;
     const end = start + this.movimentosPorPagina;
-    return this.movimentos.slice(start, end);
+    return lista.slice(start, end);
+  }
+
+  getIndiceReal(i: number): number {
+    return this.movimentosPaginaAtual[i].indiceOriginal;
   }
 
   irParaProximaPagina() {
@@ -122,13 +200,17 @@ export class DetalhesPage implements OnInit {
     this.resistencias = this.pokemon.resistencias || [];
     this.imunidades =
       this.pokemon.imunidades?.length > 0 ? this.pokemon.imunidades : ['-'];
-    this.movimentos = this.pokemon.moves || [];
+
+    this.movimentos =
+      this.pokemon.moves?.map((mov: any, i: number) => ({
+        ...mov,
+        indiceOriginal: i + 1,
+      })) || [];
 
     this.totalPaginas = Math.ceil(
       this.movimentos.length / this.movimentosPorPagina
     );
     this.paginaAtual = 1;
-
     this.favorito = this.favoritosService.eFavorito(this.pokemon.id);
   }
 
@@ -136,4 +218,6 @@ export class DetalhesPage implements OnInit {
     this.favoritosService.alterarFavorito(this.pokemon);
     this.favorito = !this.favorito;
   }
+
+  carregando = false;
 }

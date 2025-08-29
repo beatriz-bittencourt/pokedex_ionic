@@ -28,13 +28,23 @@ import { TratamentosService } from 'src/app/tratamento-erros/tratamentos.service
   ],
 })
 export class ListaPokemonPage implements OnInit {
+  todosPokemons: any[] = [];
   pokemons: any[] = [];
+
   paginaAtual = 0;
   limitePorPagina = 15;
   totalPokemons = 0;
 
+  private readonly TOTAL_FIXO = 1025;
+
+  loading: boolean = false;
+
   opcoesLimite: number[] = [5, 10, 15, 20, 50];
-  ordenacao: string = 'crescente';
+  ordenacao:
+    | 'crescente'
+    | 'decrescente'
+    | 'alfabetica-asc'
+    | 'alfabetica-desc' = 'crescente';
   opcoesOrdenacao = [
     { valor: 'crescente', label: 'Numérica Crescente' },
     { valor: 'decrescente', label: 'Numérica Decrescente' },
@@ -49,13 +59,11 @@ export class ListaPokemonPage implements OnInit {
   set procuraTexto(value: string) {
     this._procuraTexto = value;
     this.paginaAtual = 0;
-    this.atualizarListaProcessada();
+    this.carregarPaginaAtual();
     this.scrollParaTopo();
   }
 
   @ViewChild(IonContent) conteudo!: IonContent;
-
-  private _listaProcessada: any[] = [];
 
   constructor(
     private pokemonService: PokemonService,
@@ -65,71 +73,147 @@ export class ListaPokemonPage implements OnInit {
   ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.carregarTodosPokemons();
+        this.carregarPaginaAtual();
       }
     });
   }
 
   async ngOnInit() {
     try {
-      // await this.tratamentoErro.mostrarLoading('Carregando...');
-      await this.carregarTodosPokemons();
+      await this.carregarPaginaAtual();
     } catch (e) {
-      this.tratamentoErro.mostrarErro('Erro ao carregar Pokémon.');
-    } finally {
-      // await this.tratamentoErro.esconderCarregando();
+      this.tratamentoErro.mostrarErro('Erro ao carregar Pokémon :(');
     }
   }
 
-  async carregarTodosPokemons() {
-    const todos = await this.pokemonService.buscarTodos();
+  async carregarPaginaAtual() {
+    try {
+      this.loading = true;
 
-    this.pokemons = todos.map((p) => ({
+      if (this.procuraTexto.trim().length > 0) {
+        await this.garantirTodosCarregados();
+        const termo = this.procuraTexto.toLowerCase();
+        let lista = this.todosPokemons.filter((p) =>
+          p.nome.toLowerCase().includes(termo)
+        );
+
+        lista = this.ordenarListaCompleta(lista);
+
+        this.totalPokemons = lista.length;
+
+        const inicio = this.paginaAtual * this.limitePorPagina;
+        this.pokemons = lista.slice(inicio, inicio + this.limitePorPagina);
+        this.marcarFavoritosNaPagina();
+        return;
+      }
+
+      if (this.ordenacao === 'crescente') {
+        const offset = this.paginaAtual * this.limitePorPagina;
+        let limite = this.limitePorPagina;
+
+        if (offset + limite > this.TOTAL_FIXO) {
+          limite = this.TOTAL_FIXO - offset;
+        }
+
+        const pagina = await this.pokemonService.buscarTodos(limite, offset);
+        this.pokemons = pagina.map((p: any) => ({
+          ...p,
+          favorito: this.favoritosService.eFavorito
+            ? this.favoritosService.eFavorito(p.id)
+            : false,
+        }));
+
+        this.totalPokemons = this.TOTAL_FIXO;
+        return;
+      }
+      if (this.ordenacao === 'decrescente') {
+        const total = this.TOTAL_FIXO;
+
+        const endExclusive = total - this.paginaAtual * this.limitePorPagina;
+        const offset = Math.max(0, endExclusive - this.limitePorPagina);
+        const pageSize = endExclusive - offset;
+
+        const pagina = await this.pokemonService.buscarTodos(pageSize, offset);
+
+        this.pokemons = pagina
+          .map((p: any) => ({
+            ...p,
+            favorito: this.favoritosService.eFavorito
+              ? this.favoritosService.eFavorito(p.id)
+              : false,
+          }))
+          .reverse();
+
+        this.totalPokemons = total;
+        return;
+      }
+
+      if (
+        this.ordenacao === 'alfabetica-asc' ||
+        this.ordenacao === 'alfabetica-desc'
+      ) {
+        await this.garantirTodosCarregados();
+
+        let lista = [...this.todosPokemons];
+        lista = this.ordenarListaCompleta(lista);
+
+        this.totalPokemons = lista.length;
+
+        const inicio = this.paginaAtual * this.limitePorPagina;
+        this.pokemons = lista.slice(inicio, inicio + this.limitePorPagina);
+        this.marcarFavoritosNaPagina();
+        return;
+      }
+    } catch (e) {
+      this.tratamentoErro.mostrarErro('Erro ao carregar Pokémon :(');
+    } finally {
+      this.loading = false;
+      this.scrollParaTopo();
+    }
+  }
+
+  private ordenarListaCompleta(lista: any[]): any[] {
+    switch (this.ordenacao) {
+      case 'alfabetica-asc':
+        return lista.sort((a, b) => a.nome.localeCompare(b.nome));
+      case 'alfabetica-desc':
+        return lista.sort((a, b) => b.nome.localeCompare(a.nome));
+      case 'decrescente':
+        return lista.sort((a, b) => b.id - a.id);
+      case 'crescente':
+      default:
+        return lista.sort((a, b) => a.id - b.id);
+    }
+  }
+
+  private async garantirTodosCarregados() {
+    if (this.todosPokemons.length > 0) return;
+    const todos = await this.pokemonService.buscarTodos(this.TOTAL_FIXO, 0);
+    this.todosPokemons = todos.map((p: any) => ({
       ...p,
       favorito: this.favoritosService.eFavorito
         ? this.favoritosService.eFavorito(p.id)
         : false,
     }));
+  }
 
+  private marcarFavoritosNaPagina() {
+    this.pokemons = this.pokemons.map((p) => ({
+      ...p,
+      favorito: this.favoritosService.eFavorito
+        ? this.favoritosService.eFavorito(p.id)
+        : false,
+    }));
+  }
+
+  limparPesquisa() {
+    this.procuraTexto = '';
     this.paginaAtual = 0;
-    this.atualizarListaProcessada();
-    this.scrollParaTopo();
+    this.carregarPaginaAtual();
   }
 
   abrirDetalhes(id: number) {
     this.router.navigate(['/detalhes', id]);
-  }
-
-  atualizarListaProcessada() {
-    let lista = [...this.pokemons];
-    if (this.procuraTexto) {
-      lista = lista.filter((p) =>
-        p.nome.toLowerCase().includes(this.procuraTexto.toLowerCase())
-      );
-    }
-
-    switch (this.ordenacao) {
-      case 'alfabetica-asc':
-        lista.sort((a, b) => a.nome.localeCompare(b.nome));
-        break;
-      case 'alfabetica-desc':
-        lista.sort((a, b) => b.nome.localeCompare(a.nome));
-        break;
-      case 'decrescente':
-        lista.sort((a, b) => b.id - a.id);
-        break;
-      case 'crescente':
-      default:
-        lista.sort((a, b) => a.id - b.id);
-        break;
-    }
-
-    this._listaProcessada = lista;
-    this.totalPokemons = this._listaProcessada.length;
-
-    if (this.paginaAtual > this.totalPaginas - 1) {
-      this.paginaAtual = Math.max(0, this.totalPaginas - 1);
-    }
   }
 
   scrollParaTopo() {
@@ -138,85 +222,53 @@ export class ListaPokemonPage implements OnInit {
 
   favoritar(pokemon: any) {
     this.favoritosService.alterarFavorito(pokemon);
-    if (this.favoritosService.eFavorito) {
-      pokemon.favorito = this.favoritosService.eFavorito(pokemon.id);
-    } else {
-      const favs = JSON.parse(
-        localStorage.getItem('favoritos') || '[]'
-      ) as any[];
-      pokemon.favorito = favs.some((p) => p.id === pokemon.id);
+    pokemon.favorito = this.favoritosService.eFavorito
+      ? this.favoritosService.eFavorito(pokemon.id)
+      : false;
+
+    const idx = this.todosPokemons.findIndex((p) => p.id === pokemon.id);
+    if (idx > -1) {
+      this.todosPokemons[idx] = {
+        ...this.todosPokemons[idx],
+        favorito: pokemon.favorito,
+      };
     }
-  }
-
-  get pokemonsFiltrados() {
-    if (!this.procuraTexto) return this.pokemons;
-    return this.pokemons.filter((p) =>
-      p.nome.toLowerCase().includes(this.procuraTexto.toLowerCase())
-    );
-  }
-
-  get pokemonsOrdenados() {
-    let arr = [...this.pokemonsFiltrados];
-    switch (this.ordenacao) {
-      case 'alfabetica-asc':
-        arr.sort((a, b) => a.nome.localeCompare(b.nome));
-        break;
-      case 'alfabetica-desc':
-        arr.sort((a, b) => b.nome.localeCompare(a.nome));
-        break;
-      case 'decrescente':
-        arr.sort((a, b) => b.id - a.id);
-        break;
-      case 'crescente':
-      default:
-        arr.sort((a, b) => a.id - b.id);
-        break;
-    }
-    return arr;
-  }
-
-  get totalPaginas(): number {
-    const limite = Number(this.limitePorPagina) || 1;
-    return Math.max(1, Math.ceil((this._listaProcessada.length || 0) / limite));
-  }
-
-  get pokemonsPaginaAtual() {
-    const limite = Number(this.limitePorPagina) || 1;
-    const inicio = this.paginaAtual * limite;
-    return this._listaProcessada.slice(inicio, inicio + limite);
   }
 
   proximaPagina() {
     if (this.paginaAtual + 1 < this.totalPaginas) {
       this.paginaAtual++;
-      this.scrollParaTopo();
+      this.carregarPaginaAtual();
     }
   }
 
   paginaAnterior() {
     if (this.paginaAtual > 0) {
       this.paginaAtual--;
-      this.scrollParaTopo();
+      this.carregarPaginaAtual();
     }
   }
 
   mudarLimite() {
-    this.limitePorPagina = Number(this.limitePorPagina) || 15;
     this.paginaAtual = 0;
-    this.atualizarListaProcessada();
-    this.scrollParaTopo();
+    this.limitePorPagina = Number(this.limitePorPagina) || 15;
+    this.carregarPaginaAtual();
+  }
+
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.totalPokemons / this.limitePorPagina));
   }
 
   irParaPagina(num: number) {
     this.paginaAtual = num - 1;
-    this.scrollParaTopo();
+    this.carregarPaginaAtual();
   }
 
   quandoMudarOrdenacao() {
     this.paginaAtual = 0;
-    this.atualizarListaProcessada();
-    this.scrollParaTopo();
+    this.carregarPaginaAtual();
   }
+
   get intervaloExibicao(): string {
     const inicio =
       this.totalPokemons === 0
